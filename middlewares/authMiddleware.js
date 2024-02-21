@@ -4,8 +4,8 @@ const SECRET_KEY = "hello2024"
 
 export const requireSignIn = async(req,res,next) =>{
     try {
-        const decode = JWT.verify(req.headers.authorization,SECRET_KEY)
-        req.user = decode
+        const decode = JWT.verify(req.headers.authorization,SECRET_KEY)         
+        req.user = decode // decode contains everything about the user not only pass, which helps in recongnising the customer hai ya admin ya xyz, we pass it onto the next middlware for authentication
         next()
     } catch (error) {
         console.error(error)
