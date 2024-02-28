@@ -18,10 +18,10 @@ app.use(cors())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use(morgan('dev'))
-app.use(formidable())
+// app.use(formidable())
 
 app.get('/healthcheck', (req, res) => {
-    return res.send({status: 200, message: "Health check || sab badiya"})
+    return res.send({status: 200, message: "Health check"})
 })
 
 app.use('/api/v1/auth', authRoute)

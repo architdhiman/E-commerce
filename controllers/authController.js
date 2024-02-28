@@ -50,7 +50,6 @@ const registerController = async (req, res) => {
 };
 
 const loginController = async (req, res) => {
-  console.log("loginController");
   try {
     const { email, password } = req.body;
     if (!email) {
@@ -84,8 +83,7 @@ const loginController = async (req, res) => {
         role: user.role,
       },
       token,
-    });
-    console.log("logged in successfully");
+    });  
   } catch (error) {
     res.send({ error: error.message, message: "login failed", success: false });
   }
