@@ -87,6 +87,24 @@ export const getSingleProductController = async (req, res) => {
   }
 };
 
+export const productFiltersController = async(req, res) => {
+      try {
+        const{checked,radio} = req.body
+        let args = {}
+        if (checked.lengh > 0) args.category = checked
+        if(radio.length) args.price = {$gte: radio[0], $lte: radio[1]}
+        const products = await productModel.find(args)
+        res.status(200).send({
+          message:"Product filtered successfully",
+          success:true,
+          products
+        })
+      } catch (error) {
+        console.log(error);
+        res.status(404).send({ message: "error while filtering product", error, success: false });
+      }
+}
+
 export const productPhotoController = async (req, res) => {
   try {
     const product = await productModel.findById(req.params.pid).select("photo");
@@ -159,3 +177,34 @@ export const updateProductController = async (req, res) => {
     });
   }
 };
+
+export const productCountController = async(req,res) =>{
+try {
+  const total = await productModel.find({}).estimatedDocumentCount();
+  res.status(200).send({
+    message: "Total Document Counted Success",
+    success:true,
+    total
+  })
+} catch (error) {
+  res.status(400).send({
+    message: "Error in Product count",
+    success: false,
+    error
+  })
+}}
+
+export const productListController = async(req,res) =>{
+  try {
+    const perPage = 6
+    const page = req.params.page ? req.params.page:1
+    const products = await productModel.find({}).select("-photo").skip((page-1)*perPage).limit(perPage).sort({createdAt:-1})
+    res.status(200).send({success: true,products})
+  } catch (error) {
+    res.status(400).send({
+      message: "Error in Produclist Controller",
+      success: false,
+      error
+  })
+}
+}
