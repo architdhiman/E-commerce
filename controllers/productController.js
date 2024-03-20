@@ -1,5 +1,6 @@
 import slugify from "slugify";
 import productModel from "../models/productModel.js";
+import categoryModel from "../models/categoryModel.js";
 import fs from "fs";
 import { populate } from "dotenv";
 
@@ -282,4 +283,19 @@ export const relatedProductsController = async (req, res) => {
       message: "error in search prod ctrl",
       error,
    })}
+}
+
+export const productCategoryController = async (req, res) => {
+  try {
+    const category = await categoryModel.findOne({slug:req.params.slug})
+    const products = await productModel.find({category}).populate("category")
+    res.status(200).send({message:"product category called" , category,products})
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      message: "error in prod cat ctrl",
+      error,
+   })
+  }
 }
