@@ -5,8 +5,8 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "command": "npm run start",
-            "name": "Run Archit",
+            "command": "npm start",
+            "name": "Run npm start",
             "request": "launch",
             "type": "node-terminal"
         }

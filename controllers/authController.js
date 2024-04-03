@@ -1,6 +1,7 @@
 import { comparePassword, hashpassword } from "../helpers/authHelper.js";
 import userModel from "../models/userModel.js";
 import JWT from "jsonwebtoken";
+import orderModel from "../models/orderModel.js";
 const SECRET_KEY = "hello2024";
 
 const registerController = async (req, res) => {
@@ -157,6 +158,18 @@ export const updateProfileController = async(req,res) =>{
     });
   }
 }
+
+export const getOrdersController = async(req, res) =>{
+  try {
+    const orders = await orderModel.find({buyer:req.user._id}).populate("products","-photo").populate("buyer","name")
+  } catch (error) {
+  console.log(error);
+    res.status(400).send({
+      success: false,
+      message: "problem in updated profile cntr",
+      error,
+    });
+}}
 
 export {
   registerController,
