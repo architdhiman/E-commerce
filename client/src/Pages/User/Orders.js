@@ -3,14 +3,16 @@ import UserMenu from "../../Components/Layout/UserMenu";
 import Layout from "../../Components/Layout/Layout";
 import axios from "axios";
 import { useAuth } from "../../context/auth";
+import moment from "moment";
 
 const Orders = () => {
   const[orders,setOrders] = useState([])
   const [auth,setAuth] = useAuth()
 
-  const getOrders = () => {
+  const getOrders = async() => {
     try {
-      const {data} = axios.get(`http://localhost:8080/api/v1/auth/orders`)
+      const {data} = await axios.get(`http://localhost:8080/api/v1/auth/orders`)
+      console.log(data)
       setOrders(data)      
     } catch (error) {
       console.log(error)
@@ -30,7 +32,55 @@ const Orders = () => {
           </div>
           <div className="col-md-9">
             <h1>All Orders</h1>
-            {orders}
+            {orders?.map((o,i)=>{
+              return(
+                <div className="border-shadow">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <td>#</td>
+                        <td>Status</td>
+                        <td>Buyer</td>
+                        <td>Orders</td>
+                        <td>Payment</td>
+                        <td>Quantity</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th>{i+1}</th>
+                        <th>{o?.status}</th>
+                        <th>{o?.buyer.name}</th>
+                        <th>{moment(o?.createAt).fromNow()}</th>
+                        <th>{o?.payment.success? "Success" : "Failed"}</th>
+                        <th>{o?.products?.length}</th>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div className="container">
+                  {o?.products.map((p) => (
+              <div className="row mb-2 p-3 card flex-row" key={p._id}>
+                <div className="col-md-4">
+                  <img
+                    src={`http://localhost:8080/api/v1/product/product-photo/${p._id}`}
+                    className="card-img-top"
+                    alt={p.name}
+                    width="100px"
+                    height={"100px"}
+                  />
+                </div>
+                <div className="col-md-8">
+                  <p>{p.name}</p>
+                  <p>{p.description.substring(0, 30)}</p>
+                  <p>Price : {p.price}</p>                  
+                </div>
+              </div>
+            ))}
+                  </div>
+                </div>
+              )
+            })}
+
           </div>
         </div>
       </div>
